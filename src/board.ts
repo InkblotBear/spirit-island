@@ -1,9 +1,15 @@
 const TerrainTypes = {
     MOUNTAIN: "mountain",
+    WETLAND: "wetland",
+    JUNGLE: "jungle",
+    DESERT: "desert"
 };
 
 const Pieces = {
     TOWN: "town",
+    CITY: "city",
+    BLIGHT: "blight",
+    DAHAN: "dahan"
 };
 
 const boardA = {
@@ -18,73 +24,74 @@ const boardA = {
         ],
     },
     2: {
-        id: 1,
-        terrain: TerrainTypes.MOUNTAIN,
+        id: 2,
+        terrain: TerrainTypes.WETLAND,
         startingPieces: [
-            Pieces.TOWN,
+            Pieces.CITY,
+            Pieces.BLIGHT,
+            Pieces.DAHAN
         ],
         touching: [
-            0, 2, 4, 5, 6,
+            0, 1, 3, 4,
         ],
     },
     3: {
-        id: 1,
-        terrain: TerrainTypes.MOUNTAIN,
+        id: 3,
+        terrain: TerrainTypes.JUNGLE,
         startingPieces: [
-            Pieces.TOWN,
+            Pieces.DAHAN,
+            Pieces.DAHAN
         ],
         touching: [
-            0, 2, 4, 5, 6,
+            0, 2, 4,
         ],
     },
     4: {
-        id: 1,
-        terrain: TerrainTypes.MOUNTAIN,
+        id: 4,
+        terrain: TerrainTypes.DESERT,
         startingPieces: [
-            Pieces.TOWN,
         ],
         touching: [
-            0, 2, 4, 5, 6,
+            1, 2, 3, 5,
         ],
     },
     5: {
-        id: 1,
-        terrain: TerrainTypes.MOUNTAIN,
+        id: 5,
+        terrain: TerrainTypes.WETLAND,
         startingPieces: [
-            Pieces.TOWN,
         ],
         touching: [
-            0, 2, 4, 5, 6,
+            1, 4, 5, 6, 8
         ],
     },
     6: {
-        id: 1,
+        id: 6,
         terrain: TerrainTypes.MOUNTAIN,
         startingPieces: [
-            Pieces.TOWN,
+            Pieces.DAHAN,
         ],
         touching: [
-            0, 2, 4, 5, 6,
+            1, 4, 5, 7, 8
         ],
     },
     7: {
-        id: 1,
-        terrain: TerrainTypes.MOUNTAIN,
+        id: 7,
+        terrain: TerrainTypes.DESERT,
         startingPieces: [
-            Pieces.TOWN,
         ],
         touching: [
-            0, 2, 4, 5, 6,
+            5, 8
         ],
     },
     8: {
-        id: 1,
-        terrain: TerrainTypes.MOUNTAIN,
+        id: 8,
+        terrain: TerrainTypes.JUNGLE,
         startingPieces: [
-            Pieces.TOWN,
+            Pieces.DAHAN,
+            Pieces.DAHAN
         ],
         touching: [
-            0, 2, 4, 5, 6,
+            5, 6, 7
         ],
     }
 }
