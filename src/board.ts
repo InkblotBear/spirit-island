@@ -1,18 +1,29 @@
-const TerrainTypes = {
-    MOUNTAIN: "mountain",
-    WETLAND: "wetland",
-    JUNGLE: "jungle",
-    DESERT: "desert"
+export const enum TerrainTypes {
+    MOUNTAIN = "mountain",
+    WETLAND = "wetland",
+    JUNGLE = "jungle",
+    DESERT = "desert"
 };
 
-const Pieces = {
-    TOWN: "town",
-    CITY: "city",
-    BLIGHT: "blight",
-    DAHAN: "dahan"
+export const enum Pieces {
+    TOWN = "town",
+    CITY = "city",
+    BLIGHT = "blight",
+    DAHAN = "dahan"
 };
 
-const boardA = {
+export interface Tile {
+    id: number;
+    terrain: TerrainTypes;
+    startingPieces: Array<Pieces>;
+    touching: Array<number>;
+}
+
+export interface Board {
+    [n: number]: Tile,
+}
+
+export const boardA: Board = {
     1: {
         id: 1,
         terrain: TerrainTypes.MOUNTAIN,
@@ -96,13 +107,11 @@ const boardA = {
     }
 }
 
-boardA[1].touching.includes
-
-const isCoastal = (board, id) => {
+const isCoastal = (board: Board, id: number) => {
     const piece = board[id];
     return piece.touching.includes(0);
 };
 
-const isInland = (board, id) => {
+const isInland = (board: Board, id: number) => {
     return !isCoastal(board, id);
 };
