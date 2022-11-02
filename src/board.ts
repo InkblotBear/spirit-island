@@ -2,12 +2,14 @@ export const enum TerrainTypes {
     MOUNTAIN = "mountain",
     WETLAND = "wetland",
     JUNGLE = "jungle",
-    DESERT = "desert"
+    DESERT = "desert",
+    COASTAL = "coastal",
 };
 
 export const enum Pieces {
     TOWN = "town",
     CITY = "city",
+    EXPLORER = "explorer",
     BLIGHT = "blight",
     DAHAN = "dahan"
 };
@@ -15,7 +17,7 @@ export const enum Pieces {
 export interface Tile {
     id: number;
     terrain: TerrainTypes;
-    startingPieces: Array<Pieces>;
+    pieces: Array<Pieces>;
     touching: Array<number>;
 }
 
@@ -27,7 +29,7 @@ export const boardA: Board = {
     1: {
         id: 1,
         terrain: TerrainTypes.MOUNTAIN,
-        startingPieces: [
+        pieces: [
             Pieces.TOWN,
         ],
         touching: [
@@ -37,7 +39,7 @@ export const boardA: Board = {
     2: {
         id: 2,
         terrain: TerrainTypes.WETLAND,
-        startingPieces: [
+        pieces: [
             Pieces.CITY,
             Pieces.BLIGHT,
             Pieces.DAHAN
@@ -49,7 +51,7 @@ export const boardA: Board = {
     3: {
         id: 3,
         terrain: TerrainTypes.JUNGLE,
-        startingPieces: [
+        pieces: [
             Pieces.DAHAN,
             Pieces.DAHAN
         ],
@@ -60,7 +62,7 @@ export const boardA: Board = {
     4: {
         id: 4,
         terrain: TerrainTypes.DESERT,
-        startingPieces: [
+        pieces: [
         ],
         touching: [
             1, 2, 3, 5,
@@ -69,7 +71,7 @@ export const boardA: Board = {
     5: {
         id: 5,
         terrain: TerrainTypes.WETLAND,
-        startingPieces: [
+        pieces: [
         ],
         touching: [
             1, 4, 5, 6, 8
@@ -78,7 +80,7 @@ export const boardA: Board = {
     6: {
         id: 6,
         terrain: TerrainTypes.MOUNTAIN,
-        startingPieces: [
+        pieces: [
             Pieces.DAHAN,
         ],
         touching: [
@@ -88,7 +90,7 @@ export const boardA: Board = {
     7: {
         id: 7,
         terrain: TerrainTypes.DESERT,
-        startingPieces: [
+        pieces: [
         ],
         touching: [
             5, 8
@@ -97,7 +99,7 @@ export const boardA: Board = {
     8: {
         id: 8,
         terrain: TerrainTypes.JUNGLE,
-        startingPieces: [
+        pieces: [
             Pieces.DAHAN,
             Pieces.DAHAN
         ],
@@ -115,3 +117,40 @@ const isCoastal = (board: Board, id: number) => {
 const isInland = (board: Board, id: number) => {
     return !isCoastal(board, id);
 };
+
+const getAllTilesOfType = (board: Board, landTypes: TerrainTypes[]) => {
+    return [] as Tile[];
+}
+
+const countPiecesOfType = (tile: Tile, type: Pieces) => {
+    return tile.pieces.filter((piece) => piece === type).length
+}
+
+const phases = {
+    invader: {
+        invaderActions: {
+            build: (board: Board, landTypes: TerrainTypes[]) => {
+                const buildTiles = getAllTilesOfType(board, landTypes);
+
+                buildTiles.forEach((tile) => {
+                    const cityCount = countPiecesOfType(tile, Pieces.CITY);
+                    const townCount = countPiecesOfType(tile, Pieces.TOWN);
+                    const explorerCount = countPiecesOfType(tile, Pieces.EXPLORER);
+
+                    if (cityCount === 0 && townCount === 0 && explorerCount === 0) {
+                        return;
+                    }
+
+                    if (townCount > cityCount) {
+                        tile.pieces.push(Pieces.CITY);
+                    } else {
+                        tile.pieces.push(Pieces.TOWN);
+                    }
+                })
+            }
+        },
+    }
+}
+
+phases.invader.invaderActions.build(boardA, [TerrainTypes.DESERT]);
+console.log(boardA);
