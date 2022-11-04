@@ -119,14 +119,14 @@ const isInland = (board: Board, id: number) => {
 };
 
 const getAllTilesOfType = (board: Board, landTypes: TerrainTypes[]) => {
-    return [] as Tile[];
+    return Object.values(board).filter((tile: Tile) => landTypes.includes(tile.terrain));
 }
 
 const countPiecesOfType = (tile: Tile, type: Pieces) => {
     return tile.pieces.filter((piece) => piece === type).length
 }
 
-const phases = {
+export const phases = {
     invader: {
         invaderActions: {
             build: (board: Board, landTypes: TerrainTypes[]) => {
@@ -146,11 +146,9 @@ const phases = {
                     } else {
                         tile.pieces.push(Pieces.TOWN);
                     }
-                })
+                });
+                return buildTiles;
             }
         },
     }
 }
-
-phases.invader.invaderActions.build(boardA, [TerrainTypes.DESERT]);
-console.log(boardA);

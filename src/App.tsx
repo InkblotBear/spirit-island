@@ -2,7 +2,15 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import {phases, boardA, TerrainTypes} from './board';
+
 function App() {
+  console.log('before');
+  console.log(boardA);
+  phases.invader.invaderActions.build(boardA, [TerrainTypes.MOUNTAIN]);
+  console.log('after');
+  console.log(boardA);
+  
   return (
     <div className="App">
       <header className="App-header">
