@@ -25,7 +25,7 @@ export interface Board {
     [n: number]: Tile,
 }
 
-export const boardA: Board = {
+export const createBoardA: () => Board = () => ({
     1: {
         id: 1,
         terrain: TerrainTypes.MOUNTAIN,
@@ -107,7 +107,7 @@ export const boardA: Board = {
             5, 6, 7
         ],
     }
-}
+})
 
 const isCoastal = (board: Board, id: number) => {
     const piece = board[id];

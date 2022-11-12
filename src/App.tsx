@@ -1,19 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-import {phases, boardA, TerrainTypes, Tile} from './board';
+import {phases, createBoardA, TerrainTypes, Tile} from './board';
 
 function App() {
-  console.log('before');
-  console.log(boardA);
-  // phases.invader.invaderActions.build(boardA, [TerrainTypes.MOUNTAIN]);
-  console.log('after');
-  console.log(boardA);
+  const [board, setBoard] = useState(createBoardA());
+  const [buildType, setBuildType] = useState(TerrainTypes.MOUNTAIN);
   
   return (
     <div className="App">
-      {Object.values(boardA).map((tile: Tile) => {
+      <button onClick={() => {
+        setBuildType(TerrainTypes.WETLAND);
+      }}>
+        Set build type to {TerrainTypes.WETLAND}
+      </button>
+      <button onClick={() => {
+        setBuildType(TerrainTypes.DESERT);
+      }}>
+        Set build type to {TerrainTypes.DESERT}
+      </button>
+      <button onClick={() => {
+        phases.invader.invaderActions.build(board, [buildType]);
+        setBoard({...board});
+      }}>
+        Build phase {buildType}
+      </button>
+
+      {Object.values(board).map((tile: Tile) => {
         return <div>
           <div>Id: {tile.id}</div>
           <div>Terrain: {tile.terrain}</div>
