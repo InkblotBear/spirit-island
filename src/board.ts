@@ -22,7 +22,7 @@ export interface Tile {
 }
 
 export interface Board {
-    [n: number]: Tile,
+    [n: number]: Tile | undefined,
 }
 
 export const createBoardA: () => Board = () => ({
@@ -109,14 +109,18 @@ export const createBoardA: () => Board = () => ({
     }
 })
 
-const isCoastal = (board: Board, id: number) => {
-    const piece = board[id];
-    return piece.touching.includes(0);
+const getIsCoastal = (board: Board, id: number) => {
+    const tile = board[id];
+    return !!(tile?.touching.includes(0));
 };
 
-const isInland = (board: Board, id: number) => {
-    return !isCoastal(board, id);
+const getIsInland = (board: Board, id: number) => {
+    return !getIsCoastal(board, id);
 };
+
+const getHasBuilding = (tile: Tile) => {
+    return !!(countPiecesOfType(tile, Pieces.CITY) || countPiecesOfType(tile, Pieces.TOWN));
+}
 
 const getAllTilesOfType = (board: Board, landTypes: TerrainTypes[]) => {
     return Object.values(board).filter((tile: Tile) => landTypes.includes(tile.terrain));
@@ -129,6 +133,26 @@ const countPiecesOfType = (tile: Tile, type: Pieces) => {
 export const phases = {
     invader: {
         invaderActions: {
+            explore: (board: Board, landTypes: TerrainTypes[]) => {
+                const exploreTiles = getAllTilesOfType(board, landTypes);
+
+                exploreTiles.forEach((tile: Tile) => {
+                    // Has City or Town
+                    const hasBuilding = getHasBuilding(tile);
+                    // Coastal 
+                    const isCoastal = getIsCoastal(board, tile.id)
+                    // Adjacent to City or Town
+                    const adjacentExplore = tile.touching.some((id: number) => {
+                        // You can return a variable (you super dont have to do it like that)
+                        const adjacentTile = board[id];
+                        const adjacentBuilding = adjacentTile ? getHasBuilding(adjacentTile) : false;
+                        return adjacentBuilding;
+                    })
+                    if (hasBuilding || isCoastal || adjacentExplore) {
+                        tile.pieces.push(Pieces.EXPLORER);
+                    }
+                })
+            },
             build: (board: Board, landTypes: TerrainTypes[]) => {
                 const buildTiles = getAllTilesOfType(board, landTypes);
 
