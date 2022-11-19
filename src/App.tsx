@@ -10,15 +10,26 @@ function App() {
   const [buildType, setBuildType] = useState(TerrainTypes.MOUNTAIN);
   const [exploreType, setExploreType] = useState(TerrainTypes.MOUNTAIN);
 
-  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleBuildClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log('click left button', e);
     phases.invader.invaderActions.build(board, [buildType]);
     setBoard({...board});
   };
   
-  const handleMenuClick: MenuProps['onClick'] = e => {
+  const handleBuildTypeClick: MenuProps['onClick'] = e => {
     console.log('click', e);
     setBuildType(e.key as TerrainTypes);
+  };
+
+  const handleExploreClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('click left button', e);
+    phases.invader.invaderActions.explore(board, [exploreType]);
+    setBoard({...board});
+  };
+  
+  const handleExploreTypeClick: MenuProps['onClick'] = e => {
+    console.log('click', e);
+    setExploreType(e.key as TerrainTypes);
   };
   
   const items: MenuProps['items'] = [
@@ -44,44 +55,25 @@ function App() {
     },
   ];
   
-  const menuProps = {
+  const buildProps = {
     items,
-    onClick: handleMenuClick,
+    onClick: handleBuildTypeClick,
+  };
+
+  const exploreProps = {
+    items,
+    onClick: handleExploreTypeClick,
   };
   
   return (
     <div className="App">
-      <Dropdown.Button menu={menuProps} onClick={handleButtonClick}>
+      <Dropdown.Button menu={buildProps} onClick={handleBuildClick}>
         Build {buildType}
       </Dropdown.Button>
 
-      <button onClick={() => {
-        setExploreType(TerrainTypes.WETLAND);
-      }}>
-        Set explore type to {TerrainTypes.WETLAND}
-      </button>
-      <button onClick={() => {
-        setExploreType(TerrainTypes.MOUNTAIN);
-      }}>
-        Set explore type to {TerrainTypes.MOUNTAIN}
-      </button>
-      <button onClick={() => {
-        setExploreType(TerrainTypes.DESERT);
-      }}>
-        Set explore type to {TerrainTypes.DESERT}
-      </button>
-      <button onClick={() => {
-        setExploreType(TerrainTypes.JUNGLE);
-      }}>
-        Set explore type to {TerrainTypes.JUNGLE}
-      </button>
-
-      <button onClick={() => {
-        phases.invader.invaderActions.explore(board, [exploreType]);
-        setBoard({...board});
-      }}>
-        Explore phase {exploreType}
-      </button>
+      <Dropdown.Button menu={exploreProps} onClick={handleExploreClick}>
+        Explore {exploreType}
+      </Dropdown.Button>
 
       {Object.values(board).map((tile: Tile) => {
         return <div>
