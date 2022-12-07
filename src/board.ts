@@ -25,6 +25,13 @@ export interface Board {
     [n: number]: Tile | undefined,
 }
 
+export const boardAAsGrid = [
+    [0, 1, 6, 6, 8],
+    [0, 1, 5, 5, 8],
+    [0, 2, 4, 5, 7],
+    [3, 3, 4, 5, 7],
+]
+
 export const createBoardA: () => Board = () => ({
     1: {
         id: 1,
