@@ -7,9 +7,9 @@ export const enum TerrainTypes {
 };
 
 export const enum Pieces {
+    EXPLORER = "explorer",
     TOWN = "town",
     CITY = "city",
-    EXPLORER = "explorer",
     BLIGHT = "blight",
     DAHAN = "dahan"
 };
@@ -20,6 +20,64 @@ export interface Tile {
     pieces: Array<Pieces>;
     touching: Array<number>;
 }
+
+export interface Piece {
+    readonly baseHealth: number;
+    currentHealth: number;
+    damage: number;
+    type: Pieces;
+}
+
+const explorerFactory: () => Piece = () => {
+    return {
+        baseHealth: 1,
+        currentHealth: 1,
+        damage: 1,
+        type: Pieces.EXPLORER,
+    }
+}
+
+const townFactory: () => Piece = () => {
+    return {
+        baseHealth: 2,
+        currentHealth: 2,
+        damage: 2,
+        type: Pieces.TOWN,
+    }
+}
+
+const cityFactory: () => Piece = () => {
+    return {
+        baseHealth: 3,
+        currentHealth: 3,
+        damage: 3,
+        type: Pieces.CITY,
+    }
+}
+
+const dahanFactory: () => Piece = () => {
+    return {
+        baseHealth: 2,
+        currentHealth: 2,
+        damage: 2,
+        type: Pieces.DAHAN,
+    }
+}
+
+/*
+//ravage step
+invaderDamage - spiritDefend = unblockedDamage
+if unblockedDamage >= 2
+    then blightStuffHappens;
+    //Blight stuff - add a blight to tile, remove 1 presence from any spirits present, if blight already present also place blight in adjacent tile (cascade)
+    //That can also cause blight cascade - need to be able to pick which tile cascades into.
+    remove dahan = Math.floor(unblockedDamage/2)
+    else (nothing happens)
+if dahan > 0
+    then dahanDamage = dahan*2
+    //need to be able to pick which invaders take damage
+    remove invader = dahanDamage - invaderHealth
+*/
 
 export interface Board {
     [n: number]: Tile | undefined,
