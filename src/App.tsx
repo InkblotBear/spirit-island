@@ -9,6 +9,7 @@ function App() {
   const [board, setBoard] = useState(createBoardA());
   const [buildType, setBuildType] = useState(TerrainTypes.MOUNTAIN);
   const [exploreType, setExploreType] = useState(TerrainTypes.MOUNTAIN);
+  const [ravageType, setRavageType] = useState(TerrainTypes.MOUNTAIN);
 
   const handleBuildClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log('click left button', e);
@@ -26,12 +27,23 @@ function App() {
     phases.invader.invaderActions.explore(board, [exploreType]);
     setBoard({...board});
   };
+
+  const handleRavageClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('click left button', e);
+    phases.invader.invaderActions.ravage(board, [ravageType]);
+    setBoard({...board});
+  };
   
   const handleExploreTypeClick: MenuProps['onClick'] = e => {
     console.log('click', e);
     setExploreType(e.key as TerrainTypes);
   };
-  
+
+  const handleRavageTypeClick: MenuProps['onClick'] = e => {
+    console.log('click', e);
+    setRavageType(e.key as TerrainTypes);
+  };
+
   const items: MenuProps['items'] = [
     {
       label: TerrainTypes.COASTAL,
@@ -64,6 +76,11 @@ function App() {
     items,
     onClick: handleExploreTypeClick,
   };
+
+  const ravageProps = {
+    items,
+    onClick: handleRavageTypeClick,
+  };
   
   return (
     <div className="App">
@@ -73,6 +90,10 @@ function App() {
 
       <Dropdown.Button menu={exploreProps} onClick={handleExploreClick}>
         Explore {exploreType}
+      </Dropdown.Button>
+
+      <Dropdown.Button menu={ravageProps} onClick={handleRavageClick}>
+        Ravage {ravageType}
       </Dropdown.Button>
 
       {boardAAsGrid.map((row, rowIndex) => {
@@ -109,7 +130,7 @@ function App() {
                   <div>
                     <div>Id: {tile.id}</div>
                     <div>Terrain: {tile.terrain}</div>
-                    <div>Pieces: {tile.pieces.join(', ')}</div>
+                    <div>Pieces: {tile.pieces.map((piece) => typeof piece === "string" ? piece : piece.type).join(', ')}</div>
                   </div>
                 )}
               </Col>  
