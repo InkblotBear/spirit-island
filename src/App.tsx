@@ -4,6 +4,8 @@ import './App.css';
 
 import {phases, createBoardA, TerrainTypes, Tile, boardAAsGrid} from './board';
 import { Col, Dropdown, MenuProps, Row } from 'antd';
+import TileView from './components/TileView';
+
 
 function App() {
   const [board, setBoard] = useState(createBoardA());
@@ -147,6 +149,7 @@ function App() {
           })}
         </Row>
       })}
+      <TileView tile={board[1]} setTile={() => null}/>
     </div>
   );
 }
