@@ -2,7 +2,7 @@ export const enum TerrainTypes {
     MOUNTAIN = "mountain",
     WETLAND = "wetland",
     JUNGLE = "jungle",
-    DESERT = "desert",
+    SANDS = "sands",
     COASTAL = "coastal",
 };
 
@@ -113,7 +113,7 @@ export const createBoardA: () => Board = () => ({
     },
     4: {
         id: 4,
-        terrain: TerrainTypes.DESERT,
+        terrain: TerrainTypes.SANDS,
         pieces: [
         ],
         touching: [
@@ -141,7 +141,7 @@ export const createBoardA: () => Board = () => ({
     },
     7: {
         id: 7,
-        terrain: TerrainTypes.DESERT,
+        terrain: TerrainTypes.SANDS,
         pieces: [
         ],
         touching: [
@@ -182,100 +182,168 @@ const countPiecesOfType = (tile: Tile, type: Pieces) => {
     return tile.pieces.filter((piece) => typeof piece === "string" ? piece === type : piece.type === type).length
 }
 
-export const phases = {
-    invader: {
-        invaderActions: {
-            explore: (board: Board, landTypes: TerrainTypes[]) => {
-                const exploreTiles = getAllTilesOfType(board, landTypes);
+export enum Phases {
+    invaderExplore = "invaderExplore",
+    invaderBuild = "invaderBuild",
+    invaderRavage = "invaderRavage",
+}
 
-                exploreTiles.forEach((tile) => {
-                    // Has City or Town
-                    const hasBuilding = getHasBuilding(tile);
-                    // Coastal 
-                    const isCoastal = getIsCoastal(board, tile.id)
-                    // Adjacent to City or Town
-                    const adjacentExplore = tile.touching.some((id: number) => {
-                        // You can return a variable (you super dont have to do it like that)
-                        const adjacentTile = board[id];
-                        const adjacentBuilding = adjacentTile ? getHasBuilding(adjacentTile) : false;
-                        return adjacentBuilding;
-                    })
-                    if (hasBuilding || isCoastal || adjacentExplore) {
-                        tile.pieces.push(explorerFactory());
-                    }
-                })
-            },
-            build: (board: Board, landTypes: TerrainTypes[]) => {
-                const buildTiles = getAllTilesOfType(board, landTypes);
+type PhaseMap = {
+    [phase in Phases]: (board: Board, landTypes: TerrainTypes[]) => void;
+}
 
-                buildTiles.forEach((tile) => {
-                    const cityCount = countPiecesOfType(tile, Pieces.CITY);
-                    const townCount = countPiecesOfType(tile, Pieces.TOWN);
-                    const explorerCount = countPiecesOfType(tile, Pieces.EXPLORER);
+// NOTE (tech debt):
+// Invader card stages matter
+// current setup is agnostic
+// will present problems when impelmenting adversaries
+type InvaderCard = TerrainTypes[];
+export interface InvaderDeck {
+    ravage?: InvaderCard;
+    build?: InvaderCard;
+    explore?: InvaderCard;
+    advanceInvaderCards: () => void;
+}
 
-                    if (cityCount === 0 && townCount === 0 && explorerCount === 0) {
-                        return;
-                    }
-
-                    if (townCount > cityCount) {
-                        tile.pieces.push(cityFactory());
-                    } else {
-                        tile.pieces.push(townFactory());
-                    }
-                });
-                return buildTiles;
-            },
-            ravage: (board: Board, landTypes: TerrainTypes[]) => { 
-                const ravageTiles = getAllTilesOfType(board, landTypes);
-                
-                ravageTiles.forEach((tile) => {
-                    // Calculate invader damage
-                    const invaderDamage = tile.pieces.reduce((invaderDamage, piece) => {
-                        if (typeof piece === "string" || !invaderTypes.includes(piece.type)) {
-                            return invaderDamage;
-                        }
-                        return piece.damage + invaderDamage;
-                    }, 0);
-
-                    // TODO: Spirit Defend phase (spirits currently unimplemented entirely)
-                    const spiritDefend = 0;
-                    const unblockedDamage = invaderDamage - spiritDefend;
-                    if (unblockedDamage >= 2) {
-                        // TODO blightStuffHappens;
-                        //Blight stuff - add a blight to tile, remove 1 presence from any spirits present, if blight already present also place blight in adjacent tile (cascade)
-                        //That can also cause blight cascade - need to be able to pick which tile cascades into.
-                    }
-                    // remove dahan based on damage done versus health, sort from weakest to strongest
-                    const dahanPieces = tile.pieces.filter((piece) => typeof piece !== 'string' && piece.type === Pieces.DAHAN) as Piece[];
-                    dahanPieces.sort((a, b) => a.currentHealth - b.currentHealth);
-                    let index = 0;
-                    let remainingDamage = unblockedDamage;
-                    while (dahanPieces[index] !== undefined && remainingDamage >= dahanPieces[index].currentHealth) {
-                        const dahanPiece = dahanPieces[index];
-                        remainingDamage -= dahanPiece.currentHealth;
-                        index += 1;
-                    }
-                    const survivingDahanPieces = dahanPieces.slice(index);
-                    tile.pieces = [...survivingDahanPieces, ...tile.pieces.filter((piece) => typeof piece === 'string' || piece.type !== Pieces.DAHAN)]
-
-                    // if dahan > 0
-                        // then dahanDamage = dahan*2
-                        //need to be able to pick which invaders take damage
-                        // remove invader = dahanDamage - invaderHealth
-                    const invaderPieces = tile.pieces.filter((piece) => typeof piece !== 'string' && invaderTypes.includes(piece.type)) as Piece[];
-                    invaderPieces.sort((a, b) => a.currentHealth - b.currentHealth);
-                    index = 0;
-                    remainingDamage = survivingDahanPieces.reduce((damage, dahan) => damage + dahan.damage, 0);
-                    while (invaderPieces[index] !== undefined && remainingDamage >= invaderPieces[index].currentHealth) {
-                        const invaderPiece = invaderPieces[index];
-                        remainingDamage -= invaderPiece.currentHealth;
-                        index += 1;
-                    }
-                    const survivingInvaderPieces = invaderPieces.slice(index);
-                    tile.pieces = [...survivingInvaderPieces, ...tile.pieces.filter((piece) => typeof piece === 'string' || !invaderTypes.includes(piece.type))];
-                });
-                return ravageTiles;
-            },
-        },
+function shuffleArray<T>(array: T[]) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
     }
 }
+
+export function makeTheInvaderDeck(): InvaderDeck {
+    /*
+    Stage 1 - Mountain, Wetland, Jungle, Sands
+    Stage 2 - Mountain, Wetlands, Jungle, Sands, Coastal
+    Stage 3 - Mountain/Wetlands, Mountain/Jungle, Mountain/Sands, Wetlands/Jungle, Wetlands/Sands, Forest/Sands
+
+    Start of each game, pick randomly [3 Stage 1], [4 Stage 2], [5 Stage 3] cards.
+    */
+    const stage1: InvaderCard[] = [[TerrainTypes.MOUNTAIN], [TerrainTypes.WETLAND], [TerrainTypes.JUNGLE], [TerrainTypes.SANDS]];
+    const stage2: InvaderCard[] = [[TerrainTypes.MOUNTAIN], [TerrainTypes.WETLAND], [TerrainTypes.JUNGLE], [TerrainTypes.SANDS], [TerrainTypes.COASTAL]];
+    // TODO: fill out rest of stage 3 cards
+    const stage3: InvaderCard[] = [[TerrainTypes.MOUNTAIN, TerrainTypes.WETLAND]];
+
+    shuffleArray(stage1);
+    shuffleArray(stage2);
+    shuffleArray(stage3);
+
+    stage1.pop();
+    stage2.pop();
+    // TODO when stage 3 filled out
+    // stage3.pop();
+
+    return {
+        // explore starts as defined from beginning (failure state when undefined)
+        explore: stage1.pop(),
+        advanceInvaderCards: function() {
+            this.ravage = this.build;
+            this.build = this.explore;
+
+            if (stage1.length > 0) {
+                this.explore = stage1.pop()!;
+            } else if (stage2.length > 0) {
+                this.explore = stage2.pop()!;
+            } else {
+               this.explore = stage3.pop(); 
+            }
+        }
+    }
+}
+
+export interface GameState {
+    board: Board;
+    invaderCards: InvaderDeck;
+}
+
+export const phases: PhaseMap = {
+    invaderExplore: (board: Board, landTypes: TerrainTypes[]) => {
+        const exploreTiles = getAllTilesOfType(board, landTypes);
+
+        exploreTiles.forEach((tile) => {
+            // Has City or Town
+            const hasBuilding = getHasBuilding(tile);
+            // Coastal 
+            const isCoastal = getIsCoastal(board, tile.id)
+            // Adjacent to City or Town
+            const adjacentExplore = tile.touching.some((id: number) => {
+                // You can return a variable (you super dont have to do it like that)
+                const adjacentTile = board[id];
+                const adjacentBuilding = adjacentTile ? getHasBuilding(adjacentTile) : false;
+                return adjacentBuilding;
+            })
+            if (hasBuilding || isCoastal || adjacentExplore) {
+                tile.pieces.push(explorerFactory());
+            }
+        })
+    },
+    invaderBuild: (board: Board, landTypes: TerrainTypes[]) => {
+        const buildTiles = getAllTilesOfType(board, landTypes);
+
+        buildTiles.forEach((tile) => {
+            const cityCount = countPiecesOfType(tile, Pieces.CITY);
+            const townCount = countPiecesOfType(tile, Pieces.TOWN);
+            const explorerCount = countPiecesOfType(tile, Pieces.EXPLORER);
+
+            if (cityCount === 0 && townCount === 0 && explorerCount === 0) {
+                return;
+            }
+
+            if (townCount > cityCount) {
+                tile.pieces.push(cityFactory());
+            } else {
+                tile.pieces.push(townFactory());
+            }
+        });
+    },
+    invaderRavage: (board: Board, landTypes: TerrainTypes[]) => { 
+        const ravageTiles = getAllTilesOfType(board, landTypes);
+        
+        ravageTiles.forEach((tile) => {
+            // Calculate invader damage
+            const invaderDamage = tile.pieces.reduce((invaderDamage, piece) => {
+                if (typeof piece === "string" || !invaderTypes.includes(piece.type)) {
+                    return invaderDamage;
+                }
+                return piece.damage + invaderDamage;
+            }, 0);
+
+            // TODO: Spirit Defend phase (spirits currently unimplemented entirely)
+            const spiritDefend = 0;
+            const unblockedDamage = invaderDamage - spiritDefend;
+            if (unblockedDamage >= 2) {
+                // TODO blightStuffHappens;
+                //Blight stuff - add a blight to tile, remove 1 presence from any spirits present, if blight already present also place blight in adjacent tile (cascade)
+                //That can also cause blight cascade - need to be able to pick which tile cascades into.
+            }
+            // remove dahan based on damage done versus health, sort from weakest to strongest
+            const dahanPieces = tile.pieces.filter((piece) => typeof piece !== 'string' && piece.type === Pieces.DAHAN) as Piece[];
+            dahanPieces.sort((a, b) => a.currentHealth - b.currentHealth);
+            let index = 0;
+            let remainingDamage = unblockedDamage;
+            while (dahanPieces[index] !== undefined && remainingDamage >= dahanPieces[index].currentHealth) {
+                const dahanPiece = dahanPieces[index];
+                remainingDamage -= dahanPiece.currentHealth;
+                index += 1;
+            }
+            const survivingDahanPieces = dahanPieces.slice(index);
+            tile.pieces = [...survivingDahanPieces, ...tile.pieces.filter((piece) => typeof piece === 'string' || piece.type !== Pieces.DAHAN)]
+
+            // if dahan > 0
+                // then dahanDamage = dahan*2
+                //need to be able to pick which invaders take damage
+                // remove invader = dahanDamage - invaderHealth
+            const invaderPieces = tile.pieces.filter((piece) => typeof piece !== 'string' && invaderTypes.includes(piece.type)) as Piece[];
+            invaderPieces.sort((a, b) => a.currentHealth - b.currentHealth);
+            index = 0;
+            remainingDamage = survivingDahanPieces.reduce((damage, dahan) => damage + dahan.damage, 0);
+            while (invaderPieces[index] !== undefined && remainingDamage >= invaderPieces[index].currentHealth) {
+                const invaderPiece = invaderPieces[index];
+                remainingDamage -= invaderPiece.currentHealth;
+                index += 1;
+            }
+            const survivingInvaderPieces = invaderPieces.slice(index);
+            tile.pieces = [...survivingInvaderPieces, ...tile.pieces.filter((piece) => typeof piece === 'string' || !invaderTypes.includes(piece.type))];
+        });
+    },
+};
