@@ -221,8 +221,7 @@ export function makeTheInvaderDeck(): InvaderDeck {
     */
     const stage1: InvaderCard[] = [[TerrainTypes.MOUNTAIN], [TerrainTypes.WETLAND], [TerrainTypes.JUNGLE], [TerrainTypes.SANDS]];
     const stage2: InvaderCard[] = [[TerrainTypes.MOUNTAIN], [TerrainTypes.WETLAND], [TerrainTypes.JUNGLE], [TerrainTypes.SANDS], [TerrainTypes.COASTAL]];
-    // TODO: fill out rest of stage 3 cards
-    const stage3: InvaderCard[] = [[TerrainTypes.MOUNTAIN, TerrainTypes.WETLAND]];
+    const stage3: InvaderCard[] = [[TerrainTypes.MOUNTAIN, TerrainTypes.WETLAND], [TerrainTypes.MOUNTAIN, TerrainTypes.JUNGLE], [TerrainTypes.MOUNTAIN, TerrainTypes.SANDS], [TerrainTypes.WETLAND, TerrainTypes.JUNGLE], [TerrainTypes.WETLAND, TerrainTypes.SANDS], [TerrainTypes.JUNGLE, TerrainTypes.SANDS]];
 
     shuffleArray(stage1);
     shuffleArray(stage2);
@@ -230,8 +229,7 @@ export function makeTheInvaderDeck(): InvaderDeck {
 
     stage1.pop();
     stage2.pop();
-    // TODO when stage 3 filled out
-    // stage3.pop();
+    stage3.pop();
 
     return {
         // explore starts as defined from beginning (failure state when undefined)
