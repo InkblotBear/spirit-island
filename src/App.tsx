@@ -19,12 +19,22 @@ function App() {
       <div>
           Ravage: [{invaderDeck.ravage?.join(', ')}],
           Build: [{invaderDeck.build?.join(', ')}],
+          {/* TODO: Explore shouldn't be revealed until explore phase starts */}
           Explore: [{invaderDeck.explore?.join(', ')}]
       </div>
       <div onClick={() => {
-        setInvaderDeck(produce((invaderDeck) => {
-          invaderDeck.advanceInvaderCards();
+        setBoard(produce((board) => {
+          if (invaderDeck.ravage) {
+            phases.invaderRavage(board, invaderDeck.ravage)
+          }
+          if (invaderDeck.build) {
+            phases.invaderBuild(board, invaderDeck.build)
+          }
+          if (invaderDeck.explore) {
+            phases.invaderExplore(board, invaderDeck.explore)
+          }
         }));
+        setInvaderDeck(invaderDeck.advanceInvaderCards());
       }}>Advance the Invader Deck</div>
       {boardAAsGrid.map((row, rowIndex) => {
         return <Row key={rowIndex} gutter={[16, 16]}>

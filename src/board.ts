@@ -1,3 +1,5 @@
+import produce from "immer";
+
 export const enum TerrainTypes {
     MOUNTAIN = "mountain",
     WETLAND = "wetland",
@@ -198,10 +200,13 @@ type PhaseMap = {
 // will present problems when impelmenting adversaries
 type InvaderCard = TerrainTypes[];
 export interface InvaderDeck {
+    stage1: InvaderCard[];
+    stage2: InvaderCard[];
+    stage3: InvaderCard[];
     ravage?: InvaderCard;
     build?: InvaderCard;
     explore?: InvaderCard;
-    advanceInvaderCards: () => void;
+    advanceInvaderCards: () => InvaderDeck;
 }
 
 function shuffleArray<T>(array: T[]) {
@@ -233,18 +238,23 @@ export function makeTheInvaderDeck(): InvaderDeck {
 
     return {
         // explore starts as defined from beginning (failure state when undefined)
+        stage1,
+        stage2,
+        stage3,
         explore: stage1.pop(),
         advanceInvaderCards: function() {
-            this.ravage = this.build;
-            this.build = this.explore;
-
-            if (stage1.length > 0) {
-                this.explore = stage1.pop()!;
-            } else if (stage2.length > 0) {
-                this.explore = stage2.pop()!;
-            } else {
-               this.explore = stage3.pop(); 
-            }
+            return produce(this, (invaderDeck) => {
+                invaderDeck.ravage = invaderDeck.build;
+                invaderDeck.build = invaderDeck.explore;
+    
+                if (invaderDeck.stage1.length > 0) {
+                    invaderDeck.explore = invaderDeck.stage1.pop()!;
+                } else if (invaderDeck.stage2.length > 0) {
+                    invaderDeck.explore = invaderDeck.stage2.pop()!;
+                } else {
+                   invaderDeck.explore = invaderDeck.stage3.pop(); 
+                }
+            });
         }
     }
 }
@@ -253,6 +263,17 @@ export interface GameState {
     board: Board;
     invaderCards: InvaderDeck;
 }
+
+/* Spirit Board Components
+    Spirit Name, Spirit Image, Spirit Setup Rules (these don't require interaction)
+    Growth Options, Presence Tracks, Special Rules, Innate Powers (these dooooooo)   */
+
+/* Spirit Phase
+    1. GROW - Choose growth options (most spirits choose 1, but some choose multiple!) and apply it's effects.
+        Gaining energy, placing presence, reclaiming cards, gaining new powers. 
+        EXAMPLE: River Surges In Sunlight - Reclaim Cards, Gain 1 Power, Gain 1 Energy OR Add 1 Presence range 1, Add 1 Presence range 1 OR Gain 1 Power, Add 1 Presence range 2
+    2. GAIN ENERGY - Gain energy equal to the highest uncovered amount  in your energy presence track.
+    3. POWER PLAYS - Choose and PAY FOR powers you will use this turn. (You do not pick targets or resolve until the relevant phase.)*/
 
 export const phases: PhaseMap = {
     invaderExplore: (board: Board, landTypes: TerrainTypes[]) => {
