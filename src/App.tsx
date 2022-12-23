@@ -7,6 +7,7 @@ import { Col, Dropdown, MenuProps, Row } from 'antd';
 import TileView from './components/TileView';
 
 import produce from "immer";
+import SpiritBoard from './SpiritBoard';
 
 function App() {
   const [board, setBoard] = useState(createBoardA());
@@ -88,6 +89,7 @@ function App() {
         </Row>
       })}
       <TileView tile={board[1]} setTile={() => null}/>
+      <SpiritBoard/>
     </div>
   );
 }
