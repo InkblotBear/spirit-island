@@ -185,6 +185,7 @@ const countPiecesOfType = (tile: Tile, type: Pieces) => {
 }
 
 export enum Phases {
+    spiritGrowth = "spiritGrowth",
     invaderExplore = "invaderExplore",
     invaderBuild = "invaderBuild",
     invaderRavage = "invaderRavage",
@@ -276,6 +277,8 @@ export interface GameState {
     3. POWER PLAYS - Choose and PAY FOR powers you will use this turn. (You do not pick targets or resolve until the relevant phase.)*/
 
 export const phases: PhaseMap = {
+    spiritGrowth:(board: Board, landTypes: TerrainTypes[]) => {
+    },
     invaderExplore: (board: Board, landTypes: TerrainTypes[]) => {
         const exploreTiles = getAllTilesOfType(board, landTypes);
 
