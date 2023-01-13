@@ -8,12 +8,15 @@ import TileView from './components/TileView';
 
 import produce from "immer";
 import SpiritBoard from './SpiritBoard';
+import { useSelector } from 'react-redux';
+
+import { IRootState } from './store';
+import { advanceInvaderDeck } from './features/boardA';
 
 function App() {
-  const [board, setBoard] = useState(createBoardA());
+  const board = useSelector<IRootState, IRootState['board']>(state => state.board);
   const [phase, setPhase] = useState(Phases.invaderRavage);
   const [invaderDeck, setInvaderDeck] = useState(makeTheInvaderDeck());
-
   
   return (
     <div className="App">
@@ -24,17 +27,7 @@ function App() {
           Explore: [{invaderDeck.explore?.join(', ')}]
       </div>
       <div onClick={() => {
-        setBoard(produce((board) => {
-          if (invaderDeck.ravage) {
-            phases.invaderRavage(board, invaderDeck.ravage)
-          }
-          if (invaderDeck.build) {
-            phases.invaderBuild(board, invaderDeck.build)
-          }
-          if (invaderDeck.explore) {
-            phases.invaderExplore(board, invaderDeck.explore)
-          }
-        }));
+        advanceInvaderDeck(invaderDeck);
         setInvaderDeck(invaderDeck.advanceInvaderCards());
       }}>Advance the Invader Deck</div>
       {boardAAsGrid.map((row, rowIndex) => {
