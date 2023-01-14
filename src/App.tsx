@@ -1,20 +1,10 @@
-import React, { useState } from "react";
-import logo from "./logo.svg";
+import { useState } from "react";
 import "./App.css";
 
-import {
-  phases,
-  createBoardA,
-  TerrainTypes,
-  Tile,
-  boardAAsGrid,
-  Phases,
-  makeTheInvaderDeck,
-} from "./board";
-import { Col, Dropdown, MenuProps, Row } from "antd";
+import { boardAAsGrid, Phases, makeTheInvaderDeck } from "./board";
+import { Col, Row } from "antd";
 import TileView from "./components/TileView";
 
-import produce from "immer";
 import SpiritBoard from "./SpiritBoard";
 import { useSelector } from "react-redux";
 

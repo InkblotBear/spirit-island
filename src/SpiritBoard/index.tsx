@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { Button, Radio } from "antd";
+import { Radio } from "antd";
 import type { RadioChangeEvent } from "antd";
-import { Col, Dropdown, MenuProps, Row } from "antd";
-import produce from "immer";
 
 function SpiritBoardTemp() {
   //   const [board, setBoard] = useState(createBoardA());

@@ -1,4 +1,3 @@
-import React from "react";
 import { Tile } from "../../board";
 
 export interface TileViewProps {

@@ -268,7 +268,9 @@ export interface GameState {
     3. POWER PLAYS - Choose and PAY FOR powers you will use this turn. (You do not pick targets or resolve until the relevant phase.)*/
 
 export const phases: PhaseMap = {
-  spiritGrowth: (board: Board, landTypes: TerrainTypes[]) => {},
+  spiritGrowth: (board: Board, landTypes: TerrainTypes[]) => {
+    // TODO
+  },
   invaderExplore: (board: Board, landTypes: TerrainTypes[]) => {
     const exploreTiles = getAllTilesOfType(board, landTypes);
 
