@@ -1,15 +1,15 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from "@reduxjs/toolkit";
 
-import { Board } from './board';
+import { Board } from "./board";
 
-import board from './features/boardA';
+import board from "./features/boardA";
 
 export interface IRootState {
-    board: Board,
+  board: Board;
 }
 
 export default configureStore({
-    reducer: {
-        board,
-    }
-});;
+  reducer: {
+    board,
+  },
+});

@@ -1,25 +1,26 @@
-import React, { useState } from 'react';
-import { Button, Radio } from 'antd';
-import type { RadioChangeEvent } from 'antd';
-import { Col, Dropdown, MenuProps, Row } from 'antd';
-import produce from "immer";
+import React, { useState } from "react";
+import { Radio } from "antd";
+import type { RadioChangeEvent } from "antd";
 
 function SpiritBoardTemp() {
-//   const [board, setBoard] = useState(createBoardA());
+  //   const [board, setBoard] = useState(createBoardA());
 
   return (
-  <div>
     <div>
-      Growth (Pick One) <br/>
-      Reclaim One, Gain 1 Power Card, Gain 1 Energy OR Add 1 presence (1), Add 1 presence (1) OR Gain 1 Power Card, Add 1 presence (2)
+      <div>
+        Growth (Pick One) <br />
+        Reclaim One, Gain 1 Power Card, Gain 1 Energy OR Add 1 presence (1), Add
+        1 presence (1) OR Gain 1 Power Card, Add 1 presence (2)
+      </div>
+      <div>
+        Presence <br />
+        [1 per turn], [2 per turn], [2 per turn], [3 per turn], [4 per turn], [4
+        per turn], [5 per turn] <div />
+        [1 play], [2 play], [2 play], [3 play], [Reclaim One], [4 play], [5
+        play]
+      </div>
     </div>
-    <div>
-      Presence <br/>
-      [1 per turn], [2 per turn], [2 per turn], [3 per turn], [4 per turn], [4 per turn], [5 per turn] <div/>
-      [1 play], [2 play], [2 play], [3 play], [Reclaim One], [4 play], [5 play]
-    </div>
-  </div>
-  )
+  );
 }
 // TODO: Growth Phase Modal - only select one (some spirits select multiple), only available during Growth Phase.
 
@@ -32,7 +33,7 @@ export const SpiritBoard: React.FC = () => {
   };
 
   const onChange = (e: RadioChangeEvent) => {
-    console.log('checked = ', e.target.checked);
+    console.log("checked = ", e.target.checked);
     setValue(e.target.value);
   };
 
@@ -65,8 +66,8 @@ export const SpiritBoard: React.FC = () => {
      };
       }}>Confirm Growth</div>*/
 
-// playerOneEnergy = 
-// playerTwoEnergy = 
+// playerOneEnergy =
+// playerTwoEnergy =
 // TODO: state based - energy is tokens that can be saved/called.
 // TODO: remove presence from track, add presence to board
 export default SpiritBoard;

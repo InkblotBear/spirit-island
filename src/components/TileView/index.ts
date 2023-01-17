@@ -1,3 +1,3 @@
-import TileView from './TileView';
+import TileView from "./TileView";
 
 export default TileView;
