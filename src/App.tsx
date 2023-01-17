@@ -6,17 +6,18 @@ import { Col, Row } from "antd";
 import TileView from "./components/TileView";
 
 import SpiritBoard from "./SpiritBoard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { IRootState } from "./store";
-import { advanceInvaderDeck } from "./features/boardA";
+import { advanceInvaderDeckTemp } from "./features/boardA";
+import { advanceInvaderDeck } from "./features/invaderDeck";
 
 function App() {
   const board = useSelector<IRootState, IRootState["board"]>(
     (state) => state.board
   );
-  const [phase, setPhase] = useState(Phases.invaderRavage);
-  const [invaderDeck, setInvaderDeck] = useState(makeTheInvaderDeck());
+  const dispatch = useDispatch();
+  const invaderDeck = useSelector<IRootState, IRootState["invaderDeck"]>((state) => state.invaderDeck);
 
   return (
     <div className="App">
@@ -28,8 +29,8 @@ function App() {
       </div>
       <div
         onClick={() => {
-          advanceInvaderDeck(invaderDeck);
-          setInvaderDeck(invaderDeck.advanceInvaderCards());
+          dispatch(advanceInvaderDeckTemp(invaderDeck));
+          dispatch(advanceInvaderDeck());
         }}
       >
         Advance the Invader Deck

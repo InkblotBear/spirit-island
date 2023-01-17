@@ -6,7 +6,7 @@ export const boardA = createSlice({
   name: "board",
   initialState: createBoardA(),
   reducers: {
-    advanceInvaderDeck: (
+    advanceInvaderDeckTemp: (
       board,
       { payload: invaderDeck }: { payload: InvaderDeck; type: string }
     ) => {
@@ -18,11 +18,12 @@ export const boardA = createSlice({
       }
       if (invaderDeck.explore) {
         phases.invaderExplore(board, invaderDeck.explore);
+        //reminder: explore card hidden until that exploration is executed
       }
     },
   },
 });
 
-export const { advanceInvaderDeck } = boardA.actions;
+export const { advanceInvaderDeckTemp } = boardA.actions;
 
 export default boardA.reducer;

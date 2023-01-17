@@ -180,7 +180,6 @@ export interface InvaderDeck {
   ravage?: InvaderCard;
   build?: InvaderCard;
   explore?: InvaderCard;
-  advanceInvaderCards: () => InvaderDeck;
 }
 
 function shuffleArray<T>(array: T[]) {
@@ -234,20 +233,6 @@ export function makeTheInvaderDeck(): InvaderDeck {
     stage2,
     stage3,
     explore: stage1.pop(),
-    advanceInvaderCards: function () {
-      return produce(this, (invaderDeck) => {
-        invaderDeck.ravage = invaderDeck.build;
-        invaderDeck.build = invaderDeck.explore;
-
-        if (invaderDeck.stage1.length > 0) {
-          invaderDeck.explore = invaderDeck.stage1.pop()!;
-        } else if (invaderDeck.stage2.length > 0) {
-          invaderDeck.explore = invaderDeck.stage2.pop()!;
-        } else {
-          invaderDeck.explore = invaderDeck.stage3.pop();
-        }
-      });
-    },
   };
 }
 
