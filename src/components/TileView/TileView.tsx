@@ -12,12 +12,12 @@ export interface TileViewProps {
 function TileView({ tile, setTile }: TileViewProps) {
   return (
     <div>
-      {tile?.pieces.map((piece) => {
+      {tile?.pieces.map((piece, index) => {
         if (typeof piece === "string") {
           return <div>{piece}</div>;
         }
         return (
-          <div>
+          <div key={index}>
             {piece.type} {piece.currentHealth}/{piece.baseHealth} Damage:{" "}
             {piece.damage}
           </div>

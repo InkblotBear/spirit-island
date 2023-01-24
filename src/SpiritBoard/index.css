@@ -1,0 +1,64 @@
+.SpiritBoard {
+  box-sizing: border-box;
+
+  position: absolute;
+  width: 475px;
+  height: 321px;
+  left: 0px;
+  top: 360px;
+
+  border: 1px solid #000000;
+  border-radius: 14px;
+}
+
+.SpiritBoardImageContainer {
+  box-sizing: border-box;
+
+  position: absolute;
+  width: 170px;
+  height: 299px;
+  left: 13px;
+  top: 11px;
+
+  border: 1px solid #000000;
+}
+
+.SpiritBoardGrowth {
+  box-sizing: border-box;
+
+  position: absolute;
+  width: 281px;
+  height: 69px;
+  left: 183px;
+  top: 11px;
+
+  border: 1px solid #000000;
+}
+
+.SpiritBoardGrowth div {
+  font-size: xx-small;
+}
+
+.SpiritBoardPresenceTrack {
+  box-sizing: border-box;
+
+  position: absolute;
+  width: 281px;
+  height: 105px;
+  left: 183px;
+  top: 80px;
+
+  border: 1px solid #000000;
+}
+
+.SpiritBoardInnatePowers {
+  box-sizing: border-box;
+
+  position: absolute;
+  width: 281px;
+  height: 125px;
+  left: 183px;
+  top: 185px;
+
+  border: 1px solid #000000;
+}
