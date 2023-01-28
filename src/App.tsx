@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 
-import { boardAAsGrid, Phases, makeTheInvaderDeck } from "./board";
+import { makeTheInvaderDeck } from "./board";
 import { Col, Row } from "antd";
 import TileView from "./components/TileView";
 
@@ -9,18 +9,27 @@ import SpiritBoard from "./SpiritBoard";
 import { useDispatch, useSelector } from "react-redux";
 
 import { IRootState } from "./store";
-import { advanceInvaderDeckTemp } from "./features/boardA";
+import { advanceInvaderDeckTemp, boardAAsGrid } from "./features/boardA";
 import { advanceInvaderDeck } from "./features/invaderDeck";
+import { advanceToNextPhase } from "./features/phases";
 
 function App() {
   const board = useSelector<IRootState, IRootState["board"]>(
     (state) => state.board
   );
   const dispatch = useDispatch();
+  const phase = useSelector<IRootState, IRootState["phase"]>((state) => state.phase);
   const invaderDeck = useSelector<IRootState, IRootState["invaderDeck"]>((state) => state.invaderDeck);
 
   return (
     <div className="App">
+      <div onClick={() => {
+          dispatch(advanceToNextPhase());
+        }}
+      >
+        Advance To Next Phase
+      </div>
+      <div>Current Phase: [{phase.value}]</div>
       <div>
         Ravage: [{invaderDeck.ravage?.join(", ")}], Build: [
         {invaderDeck.build?.join(", ")}],
