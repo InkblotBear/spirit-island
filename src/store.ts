@@ -17,7 +17,8 @@ export interface IRootState {
   board: Board;
   invaderDeck: InvaderDeck;
   phase: {
-    value: Phases
+    value: Phases;
+    label: string;
   }
 }
 

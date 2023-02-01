@@ -29,7 +29,7 @@ function App() {
       >
         Advance To Next Phase
       </div>
-      <div>Current Phase: [{phase.value}]</div>
+      <div>Current Phase: [{phase.label}]</div>
       <div>
         Ravage: [{invaderDeck.ravage?.join(", ")}], Build: [
         {invaderDeck.build?.join(", ")}],
