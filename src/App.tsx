@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 import { makeTheInvaderDeck } from "./board";
@@ -10,20 +10,28 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { IRootState } from "./store";
 import { advanceInvaderDeckTemp, boardAAsGrid } from "./features/boardA";
-import { advanceInvaderDeck } from "./features/invaderDeck";
-import { advanceToNextPhase } from "./features/phases";
+import { onPhaseChange } from "./features/invaderDeck";
+import { advanceToNextPhase, Phases } from "./features/phases";
 
 function App() {
   const board = useSelector<IRootState, IRootState["board"]>(
     (state) => state.board
   );
   const dispatch = useDispatch();
-  const phase = useSelector<IRootState, IRootState["phase"]>((state) => state.phase);
-  const invaderDeck = useSelector<IRootState, IRootState["invaderDeck"]>((state) => state.invaderDeck);
+  const phase = useSelector<IRootState, IRootState["phase"]>(
+    (state) => state.phase
+  );
+  const invaderDeck = useSelector<IRootState, IRootState["invaderDeck"]>(
+    (state) => state.invaderDeck
+  );
+  useEffect(() => {
+    dispatch(onPhaseChange(phase.value));
+  }, [phase]);
 
   return (
     <div className="App">
-      <div onClick={() => {
+      <div
+        onClick={() => {
           dispatch(advanceToNextPhase());
         }}
       >
@@ -32,18 +40,20 @@ function App() {
       <div>Current Phase: [{phase.label}]</div>
       <div>
         Ravage: [{invaderDeck.ravage?.join(", ")}], Build: [
-        {invaderDeck.build?.join(", ")}],
-        {/* TODO: Explore shouldn't be revealed until explore phase starts */}
-        Explore: [{invaderDeck.explore?.join(", ")}]
+        {invaderDeck.build?.join(", ")}], Explore: [
+        {phase.value === Phases.invaderExplore
+          ? invaderDeck.explore?.join(", ")
+          : "hidden"}
+        ]
       </div>
-      <div
+      {/* <div
         onClick={() => {
           dispatch(advanceInvaderDeckTemp(invaderDeck));
-          dispatch(advanceInvaderDeck());
+          dispatch(onPhaseChange());
         }}
       >
         Advance the Invader Deck
-      </div>
+      </div> */}
       {boardAAsGrid.map((row, rowIndex) => {
         return (
           <Row key={rowIndex} gutter={[16, 16]}>

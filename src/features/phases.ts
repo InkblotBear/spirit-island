@@ -10,6 +10,7 @@ export enum Phases {
   invaderRavage,
   invaderBuild,
   invaderExplore,
+  advanceInvaderCards,
   spiritSlowPowers,
   timePasses,
 }
@@ -24,13 +25,14 @@ const phaseAsString = [
   "Ravage",
   "Build",
   "Explore",
+  "Advance Invader Cards",
   "Slow Powers",
   "Time Passes",
 ];
 
 const numberOfPhases = Phases.timePasses + 1;
 
-export const phases = createSlice({
+export const phase = createSlice({
   name: "phase",
   initialState: {
     value: Phases.spiritGrowth,
@@ -45,6 +47,6 @@ export const phases = createSlice({
   },
 });
 
-export const { advanceToNextPhase } = phases.actions;
+export const { advanceToNextPhase } = phase.actions;
 
-export default phases.reducer;
+export default phase.reducer;

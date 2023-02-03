@@ -1,14 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { makeTheInvaderDeck } from "../board";
+import phases, { Phases } from "./phases";
 
-export const boardA = createSlice({
+export const invaderDeck = createSlice({
   name: "invaderDeck",
   initialState: makeTheInvaderDeck(),
   reducers: {
-    advanceInvaderDeck: (
+    onPhaseChange: (
       invaderDeck,
+      { payload: phaseValue }: { payload: Phases; type: string }
     ) => {
+      if (phaseValue === Phases.advanceInvaderCards) {
         invaderDeck.ravage = invaderDeck.build;
         invaderDeck.build = invaderDeck.explore;
 
@@ -19,10 +22,11 @@ export const boardA = createSlice({
         } else {
           invaderDeck.explore = invaderDeck.stage3.pop();
         }
+      }
     },
   },
 });
 
-export const { advanceInvaderDeck } = boardA.actions;
+export const { onPhaseChange } = invaderDeck.actions;
 
-export default boardA.reducer;
+export default invaderDeck.reducer;
