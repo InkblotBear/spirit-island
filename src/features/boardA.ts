@@ -1,6 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { Board, Tile, Pieces, Piece, InvaderDeck, TerrainTypes } from "../board";
+import {
+  Board,
+  Tile,
+  Pieces,
+  Piece,
+  InvaderDeck,
+  TerrainTypes,
+} from "../board";
+import phases, { Phases } from "./phases";
 
 export const invaderTypes = [Pieces.CITY, Pieces.TOWN, Pieces.EXPLORER];
 
@@ -214,8 +222,7 @@ const invaderRavage = (board: Board, landTypes: TerrainTypes[]) => {
     //need to be able to pick which invaders take damage
     // remove invader = dahanDamage - invaderHealth
     const invaderPieces = tile.pieces.filter(
-      (piece) =>
-        typeof piece !== "string" && invaderTypes.includes(piece.type)
+      (piece) => typeof piece !== "string" && invaderTypes.includes(piece.type)
     ) as Piece[];
     invaderPieces.sort((a, b) => a.currentHealth - b.currentHealth);
     index = 0;
@@ -246,24 +253,39 @@ export const boardA = createSlice({
   name: "board",
   initialState: createBoardA(),
   reducers: {
-    advanceInvaderDeckTemp: (
+    onPhaseChangeBoard: (
       board,
-      { payload: invaderDeck }: { payload: InvaderDeck; type: string }
+      action: {
+        payload: {
+          invaderDeck: InvaderDeck;
+          phaseValue: Phases;
+        };
+        type: string;
+      }
     ) => {
-      if (invaderDeck.ravage) {
-        invaderRavage(board, invaderDeck.ravage);
+      const { payload } = action;
+      if (
+        payload.phaseValue === Phases.invaderRavage &&
+        payload.invaderDeck.ravage
+      ) {
+        invaderRavage(board, payload.invaderDeck.ravage);
       }
-      if (invaderDeck.build) {
-        invaderBuild(board, invaderDeck.build);
+      if (
+        payload.phaseValue === Phases.invaderBuild &&
+        payload.invaderDeck.build
+      ) {
+        invaderBuild(board, payload.invaderDeck.build);
       }
-      if (invaderDeck.explore) {
-        invaderExplore(board, invaderDeck.explore);
-        //reminder: explore card hidden until that exploration is executed
+      if (
+        payload.phaseValue === Phases.invaderExplore &&
+        payload.invaderDeck.explore
+      ) {
+        invaderExplore(board, payload.invaderDeck.explore);
       }
     },
   },
 });
 
-export const { advanceInvaderDeckTemp } = boardA.actions;
+export const { onPhaseChangeBoard } = boardA.actions;
 
 export default boardA.reducer;

@@ -9,8 +9,8 @@ import SpiritBoard from "./SpiritBoard";
 import { useDispatch, useSelector } from "react-redux";
 
 import { IRootState } from "./store";
-import { boardAAsGrid } from "./features/boardA";
-import { onPhaseChange } from "./features/invaderDeck";
+import { onPhaseChangeBoard, boardAAsGrid } from "./features/boardA";
+import { onPhaseChangeInvaderDeck } from "./features/invaderDeck";
 import { advanceToNextPhase, Phases } from "./features/phases";
 
 function App() {
@@ -19,7 +19,8 @@ function App() {
   const phase = useSelector((state: IRootState) => state.phase);
   const invaderDeck = useSelector((state: IRootState) => state.invaderDeck);
   useEffect(() => {
-    dispatch(onPhaseChange(phase.value));
+    dispatch(onPhaseChangeInvaderDeck(phase.value));
+    dispatch(onPhaseChangeBoard({ invaderDeck, phaseValue: phase.value }));
   }, [phase]);
 
   return (

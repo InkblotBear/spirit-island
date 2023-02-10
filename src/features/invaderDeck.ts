@@ -7,7 +7,7 @@ export const invaderDeck = createSlice({
   name: "invaderDeck",
   initialState: makeTheInvaderDeck(),
   reducers: {
-    onPhaseChange: (
+    onPhaseChangeInvaderDeck: (
       invaderDeck,
       { payload: phaseValue }: { payload: Phases; type: string }
     ) => {
@@ -27,6 +27,6 @@ export const invaderDeck = createSlice({
   },
 });
 
-export const { onPhaseChange } = invaderDeck.actions;
+export const { onPhaseChangeInvaderDeck } = invaderDeck.actions;
 
 export default invaderDeck.reducer;
