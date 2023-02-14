@@ -24,6 +24,12 @@ export const invaderDeck = createSlice({
         }
       }
     },
+    reclaim: (
+      powerDeck,
+      {payload: amount} : {payload: number; type: string}
+    ) => {
+      null
+    },
   },
 });
 

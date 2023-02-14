@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Radio } from "antd";
 import type { RadioChangeEvent } from "antd";
 
 import "./index.css";
+import { advanceToNextPhase, Phases } from "../features/phases";
+import { useSelector } from "react-redux";
+import { IRootState } from "../store";
 
 const Growth: React.FC = () => {
   const [value, setValue] = useState(1);
-  const [disabled, setDisabled] = useState(false);
-
-  const toggleDisable = () => {
-    setDisabled(!disabled);
-  };
+  const [growthConfirm, setGrowthConfirm] = useState(false);
+  const phase = useSelector((state: IRootState) => state.phase);
+  const disabled = phase.value !== Phases.spiritGrowth || growthConfirm;
+  useEffect(() => {
+    setGrowthConfirm(false);
+  }, [phase]);
 
   const onChange = (e: RadioChangeEvent) => {
     console.log("checked = ", e.target.checked);
@@ -19,7 +23,9 @@ const Growth: React.FC = () => {
 
   return disabled ? (
     <div className="SpiritBoardGrowth">
-      <div className="small-text">Reclaim One, Gain 1 Power Card, Gain 1 Energy</div>
+      <div className="small-text">
+        Reclaim One, Gain 1 Power Card, Gain 1 Energy
+      </div>
       <div className="small-text">Add 1 Presence (1), Add 1 Presence (1)</div>
       <div className="small-text">Gain 1 Power, Add 1 Presence (2)</div>
     </div>
@@ -36,6 +42,24 @@ const Growth: React.FC = () => {
           <div>Gain 1 Power, Add 1 Presence (2)</div>
         </Radio>
       </Radio.Group>
+      <div
+        onClick={() => {
+          // ENERGY, POWER CARDS, HAND, DISCARD (RECLAIM), PRESENCE
+
+          /*
+          if SpiritBoardGrowth=1,
+            reclaim(1), gainPower(1), gainEnergy (1);
+          if SpiritBoardGrowth=2,
+            addPresence(1,1), addPresence(1,1);
+          if SpiritBoardGrowth=3,
+            gainPower(1) addPresence(1,1)
+          */
+
+          setGrowthConfirm(true);
+        }}
+      >
+        Confirm Growth
+      </div>
     </div>
   );
 };
@@ -52,18 +76,6 @@ export const SpiritBoard: React.FC = () => {
 };
 // button: onClick, check radio value, disable radio group
 // do thing based on radio value
-/*<div onClick={() => {
-     setDisabled = True;
-     if value=1{
-      console.log('Picked Reclaim 1, Gain 1 Power, Gain 1 Energy');
-      else if value=2{
-        console.log('Picked Add 1 Presence (range 1) twice');
-        else if value=3{
-          console.log('Picked Gain 1 Power, Add 1 Presence');
-        }
-      }
-     };
-      }}>Confirm Growth</div>*/
 
 // playerOneEnergy =
 // playerTwoEnergy =
