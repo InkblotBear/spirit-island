@@ -5,6 +5,7 @@ import { Board, InvaderDeck } from "./board";
 import board from "./features/boardA";
 import invaderDeck from "./features/invaderDeck";
 import phase, {Phases} from "./features/phases";
+import spiritEnergy from "./features/spiritEnergy";
 
 interface NestedExample {
   nestedObject: {
@@ -20,6 +21,9 @@ export interface IRootState {
     value: Phases;
     label: string;
   }
+  spiritEnergy: {
+    value: number
+  }
 }
 
 export default configureStore<IRootState>({
@@ -27,5 +31,6 @@ export default configureStore<IRootState>({
     board,
     invaderDeck,
     phase,
+    spiritEnergy
   },
 });

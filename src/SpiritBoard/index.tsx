@@ -4,12 +4,14 @@ import type { RadioChangeEvent } from "antd";
 
 import "./index.css";
 import { advanceToNextPhase, Phases } from "../features/phases";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../store";
+import { spiritEnergyChange as energyGain } from "../features/spiritEnergy";
 
 const Growth: React.FC = () => {
   const [value, setValue] = useState(1);
   const [growthConfirm, setGrowthConfirm] = useState(false);
+  const dispatch = useDispatch();
   const phase = useSelector((state: IRootState) => state.phase);
   const disabled = phase.value !== Phases.spiritGrowth || growthConfirm;
   useEffect(() => {
@@ -45,16 +47,22 @@ const Growth: React.FC = () => {
       <div
         onClick={() => {
           // ENERGY, POWER CARDS, HAND, DISCARD (RECLAIM), PRESENCE
-
-          /*
-          if SpiritBoardGrowth=1,
-            reclaim(1), gainPower(1), gainEnergy (1);
-          if SpiritBoardGrowth=2,
-            addPresence(1,1), addPresence(1,1);
-          if SpiritBoardGrowth=3,
-            gainPower(1) addPresence(1,1)
-          */
-
+          if (value === 1) {
+            // TODO
+            // dispatch(reclaim(1));
+            // dispatch(gainPower(1));
+            dispatch(energyGain(1));
+          }
+          if (value === 2) {
+            // TODO
+            // dispatch(addPresence(1,1));
+            // dispatch(addPresence(1,1));
+          }
+          if (value === 3) {
+            // TODO
+            // dispatch(gainPower(1));
+            // dispatch(addPresence(1,2));
+          }
           setGrowthConfirm(true);
         }}
       >
@@ -65,11 +73,14 @@ const Growth: React.FC = () => {
 };
 
 export const SpiritBoard: React.FC = () => {
+  const spiritEnergy = useSelector((state: IRootState) => state.spiritEnergy);
   return (
     <div className="SpiritBoard">
       <div className="SpiritBoardImageContainer"></div>
       <Growth />
-      <div className="SpiritBoardPresenceTrack"></div>
+      <div className="SpiritBoardPresenceTrack">
+        Energy: [{spiritEnergy.value}]
+      </div>
       <div className="SpiritBoardInnatePowers"></div>
     </div>
   );
