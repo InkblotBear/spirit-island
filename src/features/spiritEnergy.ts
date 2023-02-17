@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const spiritEnergy = createSlice({
     name: "energy",
     initialState: {
-      value: 0
+      value: 0,
     },
     reducers: {
         spiritEnergyChange: (

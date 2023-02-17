@@ -78,9 +78,9 @@ export const SpiritBoard: React.FC = () => {
     <div className="SpiritBoard">
       <div className="SpiritBoardImageContainer"></div>
       <Growth />
-      <div className="SpiritBoardPresenceTrack">
-        Energy: [{spiritEnergy.value}]
-      </div>
+      <div className="SpiritBoardPresenceTrack"></div>
+      {/* Energy: [{spiritEnergy.value}] */}
+      {/* <Presence /> */}
       <div className="SpiritBoardInnatePowers"></div>
     </div>
   );
