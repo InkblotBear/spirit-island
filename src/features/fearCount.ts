@@ -16,7 +16,8 @@ export const fearCount = createSlice({
             fear.value += fearChange;
             if (fear.value >= fearMaximum) {
               // fearDeck.active = fearDeck.deck.pop()!;
-              //fear value overflows
+              // fear value overflows! how do? Loop?
+              // fear.value -= fearMaximum
             }
       },
     },

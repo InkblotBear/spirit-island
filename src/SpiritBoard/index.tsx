@@ -49,7 +49,7 @@ const Growth: React.FC = () => {
           // ENERGY, POWER CARDS, HAND, DISCARD (RECLAIM), PRESENCE
           if (value === 1) {
             // TODO
-            // dispatch(reclaim(1));
+            // dispatch(reclaim)
             // dispatch(gainPower(1));
             dispatch(energyGain(1));
           }
@@ -70,6 +70,48 @@ const Growth: React.FC = () => {
       </div>
     </div>
   );
+};
+
+type SideEffect<T extends Array<unknown>> = [(...args: T) => void, T];
+type Render = string;
+type PresenceTrack = SideEffect<Array<any>>[];
+
+const sideEffect = <T extends Array<unknown>>(
+  callback: (...args: T) => void,
+  args: T
+): SideEffect<T> => {
+  return [callback, args];
+};
+
+const reclaim = (payload: number) => {
+  // This function is nonsense
+};
+
+const cardPlays = (payload: number) => {
+  // blah
+};
+
+const Presence: React.FC = () => {
+  const presenceTrackEnergy: Array<PresenceTrack> = [
+    [sideEffect(energyGain, [1])],
+    [sideEffect(energyGain, [2])],
+    [sideEffect(energyGain, [2])],
+    [sideEffect(energyGain, [3])],
+    [sideEffect(energyGain, [4])],
+    [sideEffect(energyGain, [5])],
+  ];
+  const presenceTrackPlays: Array<PresenceTrack> = [
+    [sideEffect(cardPlays, [1])],
+    [sideEffect(cardPlays, [2])],
+    [sideEffect(cardPlays, [2])],
+    [sideEffect(cardPlays, [3])],
+    // TODO: switch to reclaim when that function exists
+    [sideEffect(cardPlays, [3]), sideEffect(reclaim, [1])],
+    [sideEffect(cardPlays, [4]), sideEffect(reclaim, [1])],
+    [sideEffect(cardPlays, [5]), sideEffect(reclaim, [1])],
+  ];
+
+  return <div></div>;
 };
 
 export const SpiritBoard: React.FC = () => {
