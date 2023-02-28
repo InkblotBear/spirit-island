@@ -84,11 +84,11 @@ const sideEffect = <T extends Array<unknown>>(
 };
 
 const reclaim = (payload: number) => {
-  // This function is nonsense
+  // Delete this and import proper function when it exists
 };
 
 const cardPlays = (payload: number) => {
-  // blah
+  // Delete this and import proper function when it exists
 };
 
 const Presence: React.FC = () => {
@@ -105,13 +105,27 @@ const Presence: React.FC = () => {
     [sideEffect(cardPlays, [2])],
     [sideEffect(cardPlays, [2])],
     [sideEffect(cardPlays, [3])],
-    // TODO: switch to reclaim when that function exists
     [sideEffect(cardPlays, [3]), sideEffect(reclaim, [1])],
     [sideEffect(cardPlays, [4]), sideEffect(reclaim, [1])],
     [sideEffect(cardPlays, [5]), sideEffect(reclaim, [1])],
   ];
-
-  return <div></div>;
+  const presenceTrackEnergyString = ["1", "2", "2", "3", "4", "5"];
+  const presenceTrackPlaysString = ["1", "2", "2", "3", "Reclaim 1", "4", "5"];
+  // NEEDED: Increment Presence Track (Click leftmost inactive presence), Display Active Presence
+  return (
+    <div className="SpiritBoardPresenceTrack">
+      <div>
+        {presenceTrackEnergyString.map((energyPresence) => {
+          return <span>{energyPresence}</span>;
+        })}
+      </div>
+      <div>
+        {presenceTrackPlaysString.map((playPresence) => {
+          return <span>{playPresence}</span>;
+        })}
+      </div>
+    </div>
+  );
 };
 
 export const SpiritBoard: React.FC = () => {
@@ -120,10 +134,10 @@ export const SpiritBoard: React.FC = () => {
     <div className="SpiritBoard">
       <div className="SpiritBoardImageContainer"></div>
       <Growth />
-      <div className="SpiritBoardPresenceTrack"></div>
-      {/* Energy: [{spiritEnergy.value}] */}
-      {/* <Presence /> */}
-      <div className="SpiritBoardInnatePowers"></div>
+      <Presence />
+      <div className="SpiritBoardInnatePowers">
+        Energy: [{spiritEnergy.value}]
+      </div>
     </div>
   );
 };
