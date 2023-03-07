@@ -112,16 +112,39 @@ const Presence: React.FC = () => {
   const presenceTrackEnergyString = ["1", "2", "2", "3", "4", "5"];
   const presenceTrackPlaysString = ["1", "2", "2", "3", "Reclaim 1", "4", "5"];
   // NEEDED: Increment Presence Track (Click leftmost inactive presence), Display Active Presence
+  const energyIndex = 2;
+  const playIndex = 3;
+
   return (
     <div className="SpiritBoardPresenceTrack">
       <div>
-        {presenceTrackEnergyString.map((energyPresence) => {
-          return <span>{energyPresence}</span>;
+        {presenceTrackEnergyString.map((energyPresence, index) => {
+          let renderPresence = "";
+          if (index < energyIndex) {
+            renderPresence += energyPresence;
+          } else {
+            renderPresence += "X";
+          }
+
+          if (index < presenceTrackEnergyString.length - 1) {
+            renderPresence += ", ";
+          }
+          return <span>{renderPresence}</span>;
         })}
       </div>
       <div>
-        {presenceTrackPlaysString.map((playPresence) => {
-          return <span>{playPresence}</span>;
+        {presenceTrackPlaysString.map((playPresence, index) => {
+          let renderPresence = "";
+          if (index < playIndex) {
+            renderPresence += playPresence;
+          } else {
+            renderPresence += "X";
+          }
+
+          if (index < presenceTrackPlaysString.length - 1) {
+            renderPresence += ", ";
+          }
+          return <span>{renderPresence}</span>;
         })}
       </div>
     </div>
