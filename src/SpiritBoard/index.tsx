@@ -111,40 +111,55 @@ const Presence: React.FC = () => {
   ];
   const presenceTrackEnergyString = ["1", "2", "2", "3", "4", "5"];
   const presenceTrackPlaysString = ["1", "2", "2", "3", "Reclaim 1", "4", "5"];
-  // NEEDED: Increment Presence Track (Click leftmost inactive presence), Display Active Presence
-  const energyIndex = 2;
-  const playIndex = 3;
+  
+  // Increment Presence Track (Click leftmost inactive presence), Display Active Presence
+  const [energyIndex, setEnergyIndex] = useState(2);
+  const [playIndex, setPlayIndex] = useState(3);
+
+  const incrementEnergyIndex = () => {
+    setEnergyIndex(energyIndex + 1);
+  };
+
+  const incrementPlayIndex = () => {
+    setPlayIndex(playIndex + 1);
+  };
 
   return (
     <div className="SpiritBoardPresenceTrack">
       <div>
         {presenceTrackEnergyString.map((energyPresence, index) => {
-          let renderPresence = "";
+          let renderPresence;
           if (index < energyIndex) {
-            renderPresence += energyPresence;
+            renderPresence = energyPresence;
+          } else if (index === energyIndex) {
+            renderPresence = <button onClick={incrementEnergyIndex}>X</button>;
           } else {
-            renderPresence += "X";
+            renderPresence = "X";
           }
 
           if (index < presenceTrackEnergyString.length - 1) {
-            renderPresence += ", ";
+            renderPresence = <>{renderPresence}, </>;
           }
-          return <span>{renderPresence}</span>;
+
+          return <span key={index}>{renderPresence}</span>;
         })}
       </div>
       <div>
         {presenceTrackPlaysString.map((playPresence, index) => {
-          let renderPresence = "";
+          let renderPresence;
           if (index < playIndex) {
-            renderPresence += playPresence;
+            renderPresence = playPresence;
+          } else if (index === playIndex) {
+            renderPresence = <button onClick={incrementPlayIndex}>X</button>;
           } else {
-            renderPresence += "X";
+            renderPresence = "X";
           }
 
           if (index < presenceTrackPlaysString.length - 1) {
-            renderPresence += ", ";
+            renderPresence = <>{renderPresence}, </>;
           }
-          return <span>{renderPresence}</span>;
+
+          return <span key={index}>{renderPresence}</span>;
         })}
       </div>
     </div>
